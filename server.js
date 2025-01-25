@@ -7,6 +7,7 @@ if(process.env.NODE_ENV !== "production"){
 const express = require("express")
  const app = express()
  const expressLayouts = require("express-ejs-layouts")
+ const bodyParser = require("body-parser")
 
  // Database
 
@@ -26,6 +27,8 @@ const express = require("express")
 
  // routers
 const indexRouter = require("./routes/index")
+const AuthorsRouter = require("./routes/authors")
+const BooksRouter = require("./routes/books")
 
  //end router
 
@@ -34,7 +37,14 @@ const indexRouter = require("./routes/index")
  app.set('layout' , "layouts/layout")
  app.use(expressLayouts)
  app.use(express.static('public'))
+ app.use(bodyParser.urlencoded({limit: '10mb' ,extended:false}))
+
+ // router usage
  app.use('/',indexRouter)
+ app.use('/authors',AuthorsRouter)
+ app.use('/books',BooksRouter)
+ app.use(express.static("public")); // servers static public files  
+
 
 
  app.listen(process.env.PORT || 3001)

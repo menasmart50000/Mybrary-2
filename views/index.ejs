@@ -1,1 +1,12 @@
-Middles
+<h1>Recently Added</h1>
+
+<div>
+    <% books.forEach(book => { %>
+      <% if (book.coverImagepath) { %>
+        <img height="150" width="100" src="<%= book.coverImagepath %>" alt="Book Cover">
+      <% } else { %>
+        <p>No cover image available</p>
+      <% } %>
+    <% }); %>
+  </div>
+  
