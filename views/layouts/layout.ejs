@@ -3,9 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My-brary</title>
+
+    // intializing FILE POND 
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+    <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    // END 
+    // Adding Plugins 
+            // 1.File Encode
+
+             <script defer src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+             <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+            //end 
+
+            //2.Image Resize 
+
+              <script defer src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+              <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+            //end
+
+            //3.Image Preview
+            
+            <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+            <link
+                href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
+                rel="stylesheet" />
+
+              <script defer src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+              <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
+            //end 
+
+            //lastly, Needed js 
+            <script src="'/javascripts/FileUpload.js"> </script>
+            // end 
+
+
+
+    <title>My-Brary</title>
 </head>
 <body>
+
+
 
 <br>
 <%- include('../Partials/header') %>

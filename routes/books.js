@@ -4,21 +4,23 @@ const Author = require("../models/author");
 const Book = require("../models/book");
 
 const fs = require("fs");
-const multer = require("multer");
-const path = require("path");
-const uploadPath = path.join("public", Book.coverImageBasePath);
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']; // Fix mime types
+// const multer = require("multer");
+//const path = require("path");
+//const uploadPath = path.join("public", Book.coverImageBasePath);
+// const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']; // Fix mime types
 
-const upload = multer({
-  dest: uploadPath,
-  fileFilter: (req, file, callback) => {
-    if (imageMimeTypes.includes(file.mimetype)) {
-      callback(null, true);
-    } else {
-      callback(null, false);
-    }
-  },
-});
+// no Need for multer, File pond handles it 
+
+// const upload = multer({
+//   dest: uploadPath,
+//   fileFilter: (req, file, callback) => {
+//     if (imageMimeTypes.includes(file.mimetype)) {
+//       callback(null, true);
+//     } else {
+//       callback(null, false);
+//     }
+//   },
+// });
 
 // All books route
 router.get("/", async (req, res) => {
@@ -54,7 +56,7 @@ router.get("/new", async (req, res) => {
 });
 
 // Create new book route
-router.post("/", upload.single('cover'), async (req, res) => {
+router.post("/", async (req, res) => {
   const filename = req.file != null ? req.file.filename : null;
 
   const book = new Book({
@@ -65,25 +67,27 @@ router.post("/", upload.single('cover'), async (req, res) => {
     description: req.body.description,
     coverImageName: filename,
   });
-
+  saveCover(book, req.body.cover)
   try {
     const newBook = await book.save();
     res.redirect("/books"); // Fixed redirection to the correct route
   } catch (error) {
-    console.error(error); // Log error for debugging purposes
-    if (book.coverImageName != null) {
-      removeBookCover(book.coverImageName);
-    }
-    renderNewPage(res, book, true); // Pass the book object to show form again with errors
+    console.error(error); 
   }
 });
+function saveCover(book, coverEncoded){
+  if(coverEncoded!= null ){
+    const cover  = JSON.parse(coverEncoded);}
+  if(cover != null && imageMimeTypes.include(cover.type)){
+    book.coverImage = new Buffer.from(cover.data, "base64");
+    book.coverImageType = cover.type;
 
-// Remove book cover image
-function removeBookCover(filename) {
-  fs.unlink(path.join(uploadPath, filename), (err) => {
-    if (err) console.error(err);
-  });
+  } 
+
+
 }
+
+
 
 // Render the "new book" page
 async function renderNewPage(res, book, hasError = false) {
