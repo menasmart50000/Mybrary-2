@@ -10,6 +10,6 @@
     <div> <%= author.name %> </div> 
     <a href=" /authors/<%=author.id%>"> View </a>
     <a href=" /authors/<%=author.id%>/edit"> edit </a>
-    <%- include('../Partials/deleteForm', {url: '/authors/${author.id}'}) %>
+    <%- include('../Partials/deleteForm', {url: `/authors/${author.id}`}) %>
 
 <% });%>

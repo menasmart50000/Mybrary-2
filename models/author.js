@@ -8,7 +8,7 @@ const authorSchema = new mongoose.Schema
 
 });
 
-author.Schema.pre('remove', function(next){
+authorSchema.pre('remove', function(next){
 
      Book.find({author:this.id}, (err, book) => {
           if(err){
