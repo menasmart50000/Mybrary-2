@@ -60,7 +60,7 @@ router.get("/", async (req, res) => {
 
 // Create new book route
 router.post("/", async (req, res) => {
-  const filename = req.file != null ? req.file.filename : null;
+  
 
   const book = new Book({
     title: req.body.title,
@@ -68,32 +68,34 @@ router.post("/", async (req, res) => {
     publishDate: new Date(req.body.publishDate),
     pageCount: req.body.pageCount,
     description: req.body.description,
-    coverImageName: filename,
-  });
-  saveCover(book, req.body.cover)
-  try {
-    const newBook = await book.save();
-    res.redirect(`/books/${newBook.id}`); // Fixed redirection to the correct route
-  } catch (error) {
-    console.error(error); 
-  }
 });
 
-
-function saveCover(book, coverEncoded){
-
-  if(coverEncoded == null ){
-    return;
-  }
-  const cover  = JSON.parse(coverEncoded);
-  if(cover != null && imageMimeTypes.includes(cover.type)){
-    book.coverImage = new Buffer.from(cover.data, "base64");
-    book.coverImageType = cover.type;
-
-  } 
+  // Save Cover Image (from FilePond Base64)
+  saveCover(book, req.body.cover);
   
+  try {
+    const newBook = await book.save()
+    res.redirect(`books/${newBook.id}`)
+  } catch {
+    renderNewPage(res, book, true)
+  }
+  
+});
 
+// Function to Save Cover Image from FilePond
+function saveCover(book, coverEncoded) {
+  if (coverEncoded == null || coverEncoded === "") return;
 
+  try {
+      const cover = JSON.parse(coverEncoded); // Convert Base64 string to JSON
+
+      if (cover != null && imageMimeTypes.includes(cover.type)) {
+          book.coverImage = Buffer.from(cover.data, "base64"); // Convert Base64 to Buffer
+          book.coverImageType = cover.type;
+      }
+  } catch (err) {
+      console.error("Error processing cover image:", err);
+  }
 }
 
 
@@ -155,30 +157,27 @@ router.put("/:id", async (req, res) => {
 
 //DELETE BOOK Route
 
-router.delete(':/id',async (req, res) => {
+router.delete("/:id", async (req, res) => {
+  try {
+      const book = await Book.findById(req.params.id);
 
-  let book
-
-  try{
-    book = await Book.findById(req.params.id)
-    await book.findByIDandDelete();
-    res.redirect('/books')
-  }
-  catch{
-
-    if (book !=null ){
-
-      res.render('books/show',{
-      book: book,
-      errorMessage: 'could not removing book'
+      if (!book) {
+          return res.redirect("/books"); // If book not found, redirect
       }
-      )}
-      else{
-        res.redirect("/")
-      } 
-  }
 
-})
+      await Book.deleteOne({ _id: book._id }); // Correct delete method
+
+      res.redirect("/books");
+  } catch (err) {
+      console.error("Error deleting book:", err);
+
+      res.render("books/show", {
+          book: book,
+          errorMessage: "Could not remove book",
+      });
+  }
+});
+
 
 
 

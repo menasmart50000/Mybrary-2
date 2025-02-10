@@ -3,25 +3,33 @@ if(process.env.NODE_ENV !== "production"){
     require('dotenv').config()
 }
 
-
-
-
-
 const express = require("express")
-
  const app = express()
  const expressLayouts = require("express-ejs-layouts")
  const bodyParser = require("body-parser")
  const methodOverride = require("method-override")
- 
-
-
-
- 
+ app.use(methodOverride('_method')); // must comes before routes for properly method overrides 
  
  
 
- 
+
+  // routers
+const indexRouter = require("./routes/index")
+const AuthorsRouter = require("./routes/authors")
+const BooksRouter = require("./routes/books")
+
+ //end router
+
+
+  // usage of modules 
+  app.set('views', __dirname+ '/views');
+  app.set('view engine', 'ejs');
+  app.set('layout' , "layouts/layout")
+  app.use(expressLayouts)
+  app.use(bodyParser.urlencoded({limit: '10mb' ,extended:false}))
+  app.use(express.json());   
+  // END usage of modules 
+
  // Database
 
  const mongoose = require("mongoose");
@@ -33,8 +41,6 @@ const express = require("express")
  db.on("error", error => console.error(error));
  db.once("open", () => console.log("connected to mongoose!"));
  
-
-
 
  //Database END 
 
@@ -70,20 +76,8 @@ const express = require("express")
 
 // cleanup end
 
- // routers
-const indexRouter = require("./routes/index")
-const AuthorsRouter = require("./routes/authors")
-const BooksRouter = require("./routes/books")
 
- //end router
- app.use(methodOverride('_method')); // must comes before routes for properly method overrides 
- app.set('views', __dirname+ '/views');
- app.set('view engine', 'ejs');
- app.set('layout' , "layouts/layout")
- app.use(expressLayouts)
- app.use(bodyParser.urlencoded({limit: '10mb' ,extended:false}))
- app.use(express.json());   
-
+ 
  // router usage
  app.use('/',indexRouter)
  app.use('/authors',AuthorsRouter)

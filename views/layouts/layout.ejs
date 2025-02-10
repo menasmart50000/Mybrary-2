@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!--Prevent the style Load error by loading the styles first befor loading page -->
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
@@ -34,19 +34,18 @@
             <script defer src="/javascripts/fileUpload.js"> </script>
             <!-- end  -->
 
-
-
+        <!-- linking the main stylesheet in the project-->
+    <link id="main-css" rel="stylesheet" href="/stylesheets/main.css">
+    
     <title>My-Brady</title>
 </head>
 <body>
-
-
-
-<br>
-<%- include('../Partials/header') %>
-<%- include('../Partials/errorMessage') %>
-<%-body%>
-<br>
-
+  <div class="container">
+    <%- include('../partials/header.ejs') %>
+    <div class="inner-container">
+      <%- include('../partials/errorMessage.ejs') %>
+      <%- body %>
+    </div>
+  </div>
 </body>
 </html>
